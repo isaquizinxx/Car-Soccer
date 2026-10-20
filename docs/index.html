@@ -36,7 +36,7 @@ small{opacity:.7}
  <button class="nb" onclick="UI.go('garage')">CUSTOMIZE</button><button class="nb" onclick="UI.go('settings')">SETTINGS</button></div>
  <small style="margin-top:22px">W/A/S/D mover · Espaço pular (2x no ar = flip na direção) · Shift boost · No ar: W/S inclinam, A/D giram, Q/E air roll · F freio de mão · C câmera da bola · Esc menu</small></div>
 <div id="play" class="scr"><div class="pn"><h2>JOGAR ONLINE</h2><input id="name" placeholder="Seu nome" maxlength="12">
- <div class="row"><label>Modo</label><select id="size"><option value="1">1v1</option><option value="2" selected>2v2</option><option value="3">3v3</option></select></div>
+ <div class="row"><label>Modo</label><select id="size"><option value="1">1v1</option><option value="2" selected>2v2</option><option value="3">3v3</option><option value="4">4v4</option></select></div>
  <div class="row"><label>Bots</label><select id="diff"><option value="easy">Fácil</option><option value="normal" selected>Normal</option><option value="hard">Difícil</option><option value="expert">Expert</option></select></div>
  <button class="bt" onclick="UI.create()">CRIAR SALA</button>
  <div class="row"><input id="jc" placeholder="CÓDIGO" maxlength="5" style="text-transform:uppercase;width:130px"><button class="bt o" style="flex:1" onclick="UI.join()">ENTRAR NA SALA</button></div>
@@ -49,7 +49,7 @@ small{opacity:.7}
 <div id="lobby" class="scr ctr"><small>SALA</small><div id="code"></div><small>Compartilhe o código com seus amigos</small>
  <div class="teams" style="margin:16px 0"><div class="team"><b style="color:#4da3ff">TIME AZUL</b><ul id="t0"></ul><button class="bt g" onclick="NET.send({type:'team',team:0})">Entrar</button></div>
  <div class="team"><b style="color:#ff9d45">TIME LARANJA</b><ul id="t1"></ul><button class="bt g" onclick="NET.send({type:'team',team:1})">Entrar</button></div></div>
- <div class="row" style="justify-content:center"><select id="lsize" onchange="UI.settings()"><option value="1">1v1</option><option value="2">2v2</option><option value="3">3v3</option></select>
+ <div class="row" style="justify-content:center"><select id="lsize" onchange="UI.settings()"><option value="1">1v1</option><option value="2">2v2</option><option value="3">3v3</option><option value="4">4v4</option></select>
  <select id="ldiff" onchange="UI.settings()"><option value="easy">Fácil</option><option value="normal">Normal</option><option value="hard">Difícil</option><option value="expert">Expert</option></select>
  <button class="bt" id="rdy" onclick="UI.ready()">PRONTO</button><button class="bt g" onclick="UI.leave()">Sair</button></div><small style="margin-top:10px">Vagas vazias são preenchidas por bots ao iniciar.</small></div>
 <div id="hud" class="scr"><div id="top"><span id="sa">0</span><span id="tm">2:00</span><span id="sb">0</span></div><div id="png"></div><div id="bn"></div><div id="spd"></div>
@@ -58,4 +58,4 @@ small{opacity:.7}
 <div id="pause" class="scr ctr" style="z-index:5"><div class="logo">MENU</div><div class="nav"><button class="nb" onclick="UI.pause(0)">CONTINUAR</button><button class="nb" onclick="UI.leave()">SAIR DA SALA</button></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script><script src="shared/physics.js"></script>
 <script src="config.js"></script><script src="js/settings.js"></script><script src="js/audio.js"></script><script src="js/particles.js"></script><script src="js/renderer.js"></script><script src="js/car.js"></script>
-<script src="js/camera.js"></script><script src="js/network.js"></script><script src="js/ui.js"></script><script src="js/game.js"></script><script src="js/main.js"></script></body></html>
+<script src="js/camera.js"></script><script src="js/network.js"></script><script src="js/ui.js"></script><script src="js/debug.js"></script><script src="js/game.js"></script><script src="js/main.js"></script></body></html>

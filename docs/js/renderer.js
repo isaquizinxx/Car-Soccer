@@ -1,11 +1,11 @@
 // Renderer, céu, arena futurista (gramado procedural, paredes, arquibancadas, torcida, telão, holofotes, gols), bola e ambiente
-const {AX,AZ,GW,GH,GD,BR,PADS}=Phys,Q_=QS();
+let {AX,AZ,GW,GH,GD}=Phys.arena(2),PADS=[];const BR=Phys.BR,Q_=QS(); // dimensões vêm de Phys.arena(): iguais às do servidor
 const R=new T.WebGLRenderer({canvas:$('c'),antialias:ST.q!=='low',powerPreference:'high-performance'});
 R.outputEncoding=T.sRGBEncoding;R.toneMapping=T.ACESFilmicToneMapping;R.toneMappingExposure=1.15;R.setPixelRatio(Math.min(devicePixelRatio,Q_.pr,Math.sqrt(2.6e6/(innerWidth*innerHeight)))); // teto de ~2,6 MPixels: evita GPU integrada estourar a memória (tela preta)
 $('c').addEventListener('webglcontextlost',e=>{e.preventDefault();const o=['low','medium','high','ultra'],i=o.indexOf(ST.q);if(i>0){ST.q=o[i-1];saveST()}location.reload()});
 R.shadowMap.enabled=Q_.sh>0;R.shadowMap.type=T.PCFSoftShadowMap;
 const S=new T.Scene(),cam=new T.PerspectiveCamera(72,1,.1,700);S.fog=new T.FogExp2(0x2a2048,.0045);S.add(FX.pts);
-const SC=(()=>{
+function buildArena(A){({AX,AZ,GW,GH,GD}=A);PADS=A.pads;
  const mk=(w,h,d,m,x,y,z,sh)=>{const o=new T.Mesh(new T.BoxGeometry(w,h,d),m);o.position.set(x,y,z);if(sh){o.castShadow=o.receiveShadow=true}S.add(o);return o};
  const M={conc:new T.MeshStandardMaterial({color:0x474c5a,roughness:.95}),met:new T.MeshStandardMaterial({color:0x9aa4b5,metalness:.9,roughness:.3}),dark:new T.MeshStandardMaterial({color:0x1a1e2a,metalness:.7,roughness:.4}),
   glass:new T.MeshStandardMaterial({color:0x88b8ff,transparent:true,opacity:.12,roughness:.05,metalness:.6,depthWrite:false})};
@@ -18,7 +18,7 @@ const SC=(()=>{
  const sg=new T.BufferGeometry();sg.setAttribute('position',new T.BufferAttribute(sp,3));S.add(new T.Points(sg,new T.PointsMaterial({size:2,color:0xffffff,fog:false})));
  const sk=new T.InstancedMesh(new T.BoxGeometry(1,1,1),new T.MeshBasicMaterial({color:0x111a36}),140),d=new T.Object3D();
  for(let i=0;i<140;i++){const a=i/140*6.283,r=230+Math.random()*60,h=20+Math.random()*80;d.position.set(Math.cos(a)*r,h/2,Math.sin(a)*r);d.scale.set(10+Math.random()*16,h,10+Math.random()*16);d.updateMatrix();sk.setMatrixAt(i,d.matrix)}S.add(sk);
- if(Q_.env){const e=new T.Scene();e.add(new T.Mesh(new T.SphereGeometry(50,16,8),skyM));S.environment=new T.PMREMGenerator(R).fromScene(e,0).texture}
+ if(Q_.env&&!S.environment){const e=new T.Scene();e.add(new T.Mesh(new T.SphereGeometry(50,16,8),skyM));S.environment=new T.PMREMGenerator(R).fromScene(e,0).texture}
  // luzes
  S.add(new T.HemisphereLight(0x8aa0ff,0x1b2a1c,.55));
  const sun=new T.DirectionalLight(0xfff0dd,.9);sun.position.set(30,55,20);sun.castShadow=Q_.sh>0;sun.shadow.mapSize.set(Q_.sh||1,Q_.sh||1);const sc=sun.shadow.camera;sc.left=-62;sc.right=62;sc.top=36;sc.bottom=-36;sc.near=1;sc.far=140;sun.shadow.bias=-.0004;sun.shadow.normalBias=.02;sun.shadow.radius=Q_.sh>1024?3:1;S.add(sun);
@@ -81,4 +81,6 @@ const SC=(()=>{
   const dpa=dg.attributes.position;for(let i=0;i<240;i++){let y=dpa.getY(i)+dt*.6;if(y>20)y=0;dpa.setY(i,y)}dpa.needsUpdate=true;
   gl.forEach(l=>l.intensity+=((Q_.sp>0?.8:0)-l.intensity)*Math.min(1,dt*2));blob.position.x=ballPos.x;blob.position.z=ballPos.z;blob.scale.setScalar(Math.max(.4,1-ballPos.y*.04))}
  return{ball,bglow,glowTex,pads,gl,board:drawBoard,update,cheer:v=>amp=Math.max(amp,v),offset(v){const w=innerWidth,h=innerHeight;if(v)cam.setViewOffset(w,h,w*v,0,w,h);else cam.clearViewOffset()}}
-})();
+}
+let SC=buildArena(Phys.arena(2));
+function rebuildArena(A){for(const o of S.children.slice())if(o!==FX.pts){S.remove(o);o.traverse(x=>{if(x.geometry)x.geometry.dispose()})}SC=buildArena(A)}

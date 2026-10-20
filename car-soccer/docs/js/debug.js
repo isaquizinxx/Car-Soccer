@@ -1,0 +1,4 @@
+// Modo de depuração opcional: abra o jogo com ?debug no endereço (ex.: .../Car-Soccer/?debug). Não aparece para jogadores normais.
+const DBG=(location.search||'').indexOf('debug')>=0?(()=>{const d=document.createElement('pre');d.style.cssText='position:fixed;left:8px;top:8px;margin:0;padding:6px 8px;background:#000a;color:#8f8;font:12px monospace;z-index:20;pointer-events:none';document.body.appendChild(d);let fps=60;
+ return(dt,L,b)=>{fps+=(1/dt-fps)*.05;const f=v=>(+v).toFixed(1);d.textContent='fps '+(fps|0)+'  ping '+NET.ping()+' ms  sim 60 Hz  arena '+ARENA.AX*2+'x'+ARENA.AZ*2+'\n'+
+  (L?'pos '+f(L.x)+' '+f(L.y)+' '+f(L.z)+'  vel '+f(Math.hypot(L.vx,L.vz))+' m/s  vy '+f(L.vy)+'\nboost '+(L.boost|0)+'  saltos '+L.jc+'  flip '+f(L.fl)+'  no ar '+(L.y>.81)+'\n':'')+'bola '+f(Math.hypot(b.vx,b.vy,b.vz))+' m/s  spin '+f(Math.hypot(b.wx,b.wy,b.wz))+' rad/s'}})():null;

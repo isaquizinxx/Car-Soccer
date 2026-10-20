@@ -1,0 +1,61 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Car Soccer</title>
+<style>
+*{box-sizing:border-box}body{margin:0;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;color:#fff;background:#05070f;user-select:none}
+#c{position:fixed;inset:0;width:100%;height:100%}
+.scr{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 6vw;opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s,transform .4s;transform:translateY(14px)}
+.scr.on{opacity:1;visibility:visible;transform:none}.ctr{align-items:center;text-align:center;background:radial-gradient(#0b1226cc,#05070fee)}
+.logo{font-size:clamp(40px,7vw,86px);font-weight:900;font-style:italic;letter-spacing:3px;line-height:1;background:linear-gradient(90deg,#2d8cff,#7a5cff 50%,#ff8a1f);-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 4px 24px #2d8cff66)}
+.nav{display:flex;flex-direction:column;gap:10px;margin-top:28px;width:min(340px,80vw)}
+button,select,input{font:inherit;color:#fff;border:0;outline:0}
+.nb{padding:14px 26px;font-size:20px;font-weight:800;letter-spacing:2px;text-align:left;cursor:pointer;background:linear-gradient(90deg,#ffffff18,#ffffff05);border-left:4px solid #2d8cff;transition:.2s;transform:skewX(-8deg)}
+.nb:hover{padding-left:44px;border-color:#ff8a1f;background:linear-gradient(90deg,#2d8cff55,#ffffff05)}
+.pn{align-self:flex-end;width:min(420px,92vw);padding:24px;border-radius:18px;background:#0a1128d9;border:1px solid #ffffff22;backdrop-filter:blur(10px);display:flex;flex-direction:column;gap:10px;box-shadow:0 20px 60px #0009}
+.pn h2{margin:0 0 6px;letter-spacing:2px}.row{display:flex;gap:8px;align-items:center;justify-content:space-between}.row label{font-size:14px;opacity:.85}
+input,select{padding:10px 12px;border-radius:10px;background:#1a2748}input[type=color]{padding:0;width:56px;height:36px;background:none}input[type=range]{padding:0}
+.bt{padding:12px 18px;border-radius:12px;font-weight:800;cursor:pointer;background:#2d8cff;transition:.15s}.bt:hover{filter:brightness(1.2);transform:translateY(-2px)}.bt.o{background:#ff8a1f}.bt.g{background:#2a3a5e}
+.teams{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.team{min-width:240px;padding:16px;border-radius:16px;background:#0a1128cc;border:1px solid #ffffff22}.team ul{list-style:none;padding:0;margin:10px 0;text-align:left}.team li{padding:6px 0;border-bottom:1px solid #ffffff10}.dim{opacity:.45}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px;vertical-align:middle}
+#code{font-size:46px;letter-spacing:8px;color:#ffd23f;font-weight:900}
+#hud{pointer-events:none;padding:0;justify-content:flex-start;align-items:center}
+#top{margin-top:12px;display:flex;gap:16px;align-items:center;padding:6px 26px;border-radius:0 0 22px 22px;background:#050a1ccc;border-bottom:3px solid #ffffff33;font-size:38px;font-weight:900;font-style:italic}
+#sa{color:#4da3ff}#sb{color:#ff9d45}#tm{font-size:26px;min-width:76px;text-align:center}
+#bn{position:absolute;top:30%;width:100%;text-align:center;font-size:clamp(50px,10vw,120px);font-weight:900;font-style:italic;text-shadow:0 6px 40px #000,0 0 40px #ffb02e;transition:transform .15s}
+#bw{position:absolute;right:30px;bottom:26px;width:150px;height:150px;text-align:center}#bw svg{position:absolute;inset:0;transform:rotate(-90deg)}
+#bv{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;font-size:38px;font-weight:900}#bv small{font-size:13px;opacity:.7;letter-spacing:2px}
+#spd{position:absolute;right:200px;bottom:34px;font-size:30px;font-weight:800;font-style:italic}#png{position:absolute;right:16px;top:12px;font-size:13px;opacity:.7}
+#dc{position:absolute;left:24px;bottom:24px;color:#ff6b6b;font-weight:700}
+#fxo{position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity .15s;background:radial-gradient(transparent 55%,#ff9d4577 100%)}
+#flash{position:fixed;inset:0;pointer-events:none;opacity:0;background:#fff}
+#load{background:#05070f;align-items:center;text-align:center;z-index:9}#lbw{width:300px;height:6px;background:#ffffff22;border-radius:3px;margin-top:24px;overflow:hidden}#lb{height:100%;width:0;background:linear-gradient(90deg,#2d8cff,#ff8a1f);transition:width .3s}
+#res{font-size:clamp(50px,9vw,110px);font-weight:900;font-style:italic}
+small{opacity:.7}
+</style></head><body><canvas id="c"></canvas><div id="fxo"></div><div id="flash"></div>
+<div id="load" class="scr on"><div class="logo">CAR SOCCER</div><div id="lbw"><div id="lb"></div></div><small id="lt">Carregando arena...</small></div>
+<div id="menu" class="scr"><div class="logo">CAR<br>SOCCER</div><div class="nav">
+ <button class="nb" onclick="UI.go('play')">PLAY</button><button class="nb" onclick="UI.go('garage')">GARAGE</button><button class="nb" onclick="UI.training()">TRAINING</button>
+ <button class="nb" onclick="UI.go('garage')">CUSTOMIZE</button><button class="nb" onclick="UI.go('settings')">SETTINGS</button></div>
+ <small style="margin-top:22px">W/A/S/D mover · Espaço pular (2x no ar = flip na direção) · Shift boost · No ar: W/S inclinam, A/D giram, Q/E air roll · F freio de mão · C câmera da bola · Esc menu</small></div>
+<div id="play" class="scr"><div class="pn"><h2>JOGAR ONLINE</h2><input id="name" placeholder="Seu nome" maxlength="12">
+ <div class="row"><label>Modo</label><select id="size"><option value="1">1v1</option><option value="2" selected>2v2</option><option value="3">3v3</option><option value="4">4v4</option></select></div>
+ <div class="row"><label>Bots</label><select id="diff"><option value="easy">Fácil</option><option value="normal" selected>Normal</option><option value="hard">Difícil</option><option value="expert">Expert</option></select></div>
+ <button class="bt" onclick="UI.create()">CRIAR SALA</button>
+ <div class="row"><input id="jc" placeholder="CÓDIGO" maxlength="5" style="text-transform:uppercase;width:130px"><button class="bt o" style="flex:1" onclick="UI.join()">ENTRAR NA SALA</button></div>
+ <button class="bt g" onclick="UI.go('menu')">← Voltar</button></div></div>
+<div id="garage" class="scr"><div class="pn"><h2>GARAGEM</h2><div id="gopts" style="display:flex;flex-direction:column;gap:10px"></div><div class="row"><select id="pre"><option value="0">Preset 1</option><option value="1">Preset 2</option><option value="2">Preset 3</option></select><button class="bt g" onclick="UI.presetSave()">Salvar</button><button class="bt g" onclick="UI.presetLoad()">Carregar</button></div><small>Arraste para girar · roda do mouse para aproximar</small><button class="bt g" onclick="UI.go('menu')">← Voltar</button></div></div>
+<div id="settings" class="scr"><div class="pn"><h2>CONFIGURAÇÕES</h2>
+ <div class="row"><label>Gráficos</label><select id="qs"><option value="low">LOW</option><option value="medium">MEDIUM</option><option value="high">HIGH</option><option value="ultra">ULTRA</option></select></div>
+ <small>Sombras, partículas, torcida, reflexos e resolução. A página recarrega ao mudar.</small>
+ <div class="row"><label>Volume</label><input id="vol" type="range" min="0" max="1" step=".05"></div><div class="row"><label>Distância da câmera</label><input id="cd" type="range" min=".7" max="1.5" step=".05"></div><button class="bt g" onclick="UI.go('menu')">← Voltar</button></div></div>
+<div id="lobby" class="scr ctr"><small>SALA</small><div id="code"></div><small>Compartilhe o código com seus amigos</small>
+ <div class="teams" style="margin:16px 0"><div class="team"><b style="color:#4da3ff">TIME AZUL</b><ul id="t0"></ul><button class="bt g" onclick="NET.send({type:'team',team:0})">Entrar</button></div>
+ <div class="team"><b style="color:#ff9d45">TIME LARANJA</b><ul id="t1"></ul><button class="bt g" onclick="NET.send({type:'team',team:1})">Entrar</button></div></div>
+ <div class="row" style="justify-content:center"><select id="lsize" onchange="UI.settings()"><option value="1">1v1</option><option value="2">2v2</option><option value="3">3v3</option><option value="4">4v4</option></select>
+ <select id="ldiff" onchange="UI.settings()"><option value="easy">Fácil</option><option value="normal">Normal</option><option value="hard">Difícil</option><option value="expert">Expert</option></select>
+ <button class="bt" id="rdy" onclick="UI.ready()">PRONTO</button><button class="bt g" onclick="UI.leave()">Sair</button></div><small style="margin-top:10px">Vagas vazias são preenchidas por bots ao iniciar.</small></div>
+<div id="hud" class="scr"><div id="top"><span id="sa">0</span><span id="tm">2:00</span><span id="sb">0</span></div><div id="png"></div><div id="bn"></div><div id="spd"></div>
+ <div id="bw"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#0008" stroke="#ffffff22" stroke-width="7"/><circle id="ring" cx="50" cy="50" r="44" fill="none" stroke="#ffb02e" stroke-width="7" stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="0"/></svg><div id="bv"><span id="bo">100</span><small>BOOST</small></div></div><div id="dc"></div></div>
+<div id="end" class="scr ctr"><div id="res"></div><div id="fin" style="font-size:54px;font-weight:800;margin-bottom:20px"></div><div class="row" style="justify-content:center"><button class="bt" onclick="NET.send({type:'lobby'})">Voltar ao lobby (host)</button><button class="bt g" onclick="UI.leave()">Sair</button></div></div>
+<div id="pause" class="scr ctr" style="z-index:5"><div class="logo">MENU</div><div class="nav"><button class="nb" onclick="UI.pause(0)">CONTINUAR</button><button class="nb" onclick="UI.leave()">SAIR DA SALA</button></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script><script src="shared/physics.js"></script>
+<script src="config.js"></script><script src="js/settings.js"></script><script src="js/audio.js"></script><script src="js/particles.js"></script><script src="js/renderer.js"></script><script src="js/car.js"></script>
+<script src="js/camera.js"></script><script src="js/network.js"></script><script src="js/ui.js"></script><script src="js/debug.js"></script><script src="js/game.js"></script><script src="js/main.js"></script></body></html>

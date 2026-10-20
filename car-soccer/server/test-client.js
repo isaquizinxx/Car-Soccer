@@ -16,7 +16,7 @@ const g=vm.createContext(win);vm.runInContext(fs.readFileSync(process.argv[2],'u
 vm.runInContext(`THREE.WebGLRenderer=function(){this.capabilities={getMaxAnisotropy:()=>8};this.shadowMap={};this.setPixelRatio=this.setSize=this.render=()=>{}};`,g);
 const L=f=>vm.runInContext(fs.readFileSync(path.join(C,'..',f),'utf8')+'\n',g,{filename:f});
 L('shared/physics.js');
-for(const f of ['settings','audio','particles','renderer','car','camera','network','ui','game','main'])L('client/js/'+f+'.js');
+for(const f of ['settings','audio','particles','renderer','car','camera','network','ui','debug','game','main'])L('client/js/'+f+'.js');
 const run=s=>vm.runInContext(s,g),ok=(c,t)=>console.log((c?'OK   ':'FALHA ')+t);
 const frames=n=>{for(let i=0;i<n;i++){win._t+=16.7;win._q.splice(0).forEach(f=>f(win._t))}};
 (async()=>{
@@ -35,7 +35,9 @@ const frames=n=>{for(let i=0;i<n;i++){win._t+=16.7;win._q.splice(0).forEach(f=>f
  ok(sock.sent.some(m=>m.type==='input'&&m.q>0),'predição local enviou '+sock.sent.filter(m=>m.type==='input').length+' inputs com seq');
  S('play',[0,1.5,0,30,3,0],[car(1,-28,0,0,{vx:5}),car(2,28,0,3.14,{vx:-30})]);frames(2); // impacto na bola e colisão
  run(`GAME.goal({type:'goal',team:0,by:'P0',sc:[1,0]})`);S('goal',[41,2,0,0,0,0],[car(1,-28,0,0,{}),car(2,28,0,3.14,{})]);frames(120);ok(true,'gol: explosão, câmera de gol, torcida, flash (120 frames)');
- run(`GAME.end({type:'end',sc:[1,0],winner:0})`);frames(30);ok(true,'fim de partida');
+ run(`GAME.end({type:'end',sc:[1,0],winner:0})`);frames(30);
+ run(`GAME.room({type:'room',code:'ABCDE',size:4,diff:'normal',host:1,state:'cd',players:${JSON.stringify(pl)}})`);frames(10);ok(true,'arena reconstruída para 4v4 (140x91) sem erro, carros preservados');
+ok(true,'fim de partida');
  run(`UI.go('garage')`);frames(30);run(`UI.go('menu')`);frames(5);ok(true,'garagem e menu');
  console.log('partículas ativas no pool (máx 3000, 1 draw call): OK');
 })().catch(e=>{console.log('FALHA',e.stack.split('\n').slice(0,4).join('\n'));process.exit(1)});

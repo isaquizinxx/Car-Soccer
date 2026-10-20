@@ -1,7 +1,7 @@
 // IA dos bots: easy / normal / hard / expert (expert prevê a bola, mira o gol e faz aerials simples)
-const {AX,clamp,wrap,rot}=require('../shared/physics');
+const {clamp,wrap,rot}=require('../shared/physics');
 const K={easy:.55,normal:.8,hard:1,expert:1},LEAD={easy:0,normal:0,hard:.25,expert:.5};
-module.exports=function(r,c){
+module.exports=function(r,c){const AX=r.A?r.A.AX:50;
   const b=r.ball,dir=c.team?-1:1,lead=LEAD[r.diff]||0,d2=p=>(p.x-b.x)**2+(p.z-b.z)**2,
     near=r.players.filter(p=>p.team===c.team).reduce((a,p)=>d2(p)<d2(a)?p:a),
     bx=b.x+b.vx*lead,bz=b.z+b.vz*lead,hd=Math.hypot(b.x-c.x,b.z-c.z),air=c.y>1.2,adv=r.diff==='hard'||r.diff==='expert';

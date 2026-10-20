@@ -1,2 +1,2 @@
 // Endereço do servidor multiplayer (Render). Edite se mudar.
-window.SERVER_URL='wss://car-soccer-fx98.onrender.com';
+window.SERVER_URL='wss://SEU-APP.onrender.com';
